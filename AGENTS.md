@@ -155,7 +155,7 @@ make prod-up            # Start production stack
 1. **Do not modify files in `.medusa/`** — it is a build-generated directory.
 2. **Do not access the DB directly** with SQL queries or MikroORM — use module services.
 3. **Do not create foreign keys between modules** — use Links instead.
-4. **Do not install dependencies with npm or yarn** — always use **Bun**.
+4. **Always use Bun** — other package managers are strictly forbidden.
 5. **Do not hardcode URLs or secrets** — use environment variables.
 6. **Do not run migrations on every instance** — only once per deployment.
 7. **Do not use TypeORM** — MedusaJS v2 uses MikroORM.

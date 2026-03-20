@@ -15,13 +15,11 @@ jobs:
         working-directory: ./backend
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: backend/package-lock.json
-      - run: npm ci
-      - run: npx tsc --noEmit
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bunx tsc --noEmit
 
   backend-unit-tests:
     name: Backend Unit Tests
@@ -31,13 +29,11 @@ jobs:
         working-directory: ./backend
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: backend/package-lock.json
-      - run: npm ci
-      - run: npm run test:unit
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run test:unit
 
   backend-integration-tests:
     name: Backend Integration Tests
@@ -78,13 +74,11 @@ jobs:
       AUTH_CORS: http://localhost:8000,http://localhost:9000
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: backend/package-lock.json
-      - run: npm ci
-      - run: npm run test:integration:http
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run test:integration:http
 
   storefront-build:
     name: Storefront Build
@@ -99,9 +93,8 @@ jobs:
       NEXT_PUBLIC_DEFAULT_REGION: es
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 22
-      - run: corepack enable
-      - run: yarn install --immutable
-      - run: yarn build
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run build

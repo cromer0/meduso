@@ -33,7 +33,7 @@ To use the [Next.js Starter Template](https://medusajs.com/nextjs-commerce/), yo
 For a quick setup, run:
 
 ```shell
-npx create-medusa-app@latest
+bunx create-medusa-app@latest
 ```
 
 Check out [create-medusa-app docs](https://docs.medusajs.com/learn/installation) for more details and troubleshooting.
@@ -78,10 +78,10 @@ mv .env.template .env.local
 
 ### Install dependencies
 
-Use Yarn to install all dependencies.
+Use Bun to install all dependencies.
 
 ```shell
-yarn
+bun install
 ```
 
 ### Start developing
@@ -89,7 +89,7 @@ yarn
 You are now ready to start up your project.
 
 ```shell
-yarn dev
+bun run dev
 ```
 
 ### Open the code and start customizing
