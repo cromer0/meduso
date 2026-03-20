@@ -1,6 +1,14 @@
+import path from "path";
+import { loadEnv } from "@medusajs/framework/utils";
 import { medusaIntegrationTestRunner } from "@medusajs/test-utils";
 
+const rootDir = path.join(__dirname, "../../");
+loadEnv("test", rootDir);
+
+jest.setTimeout(240000);
+
 medusaIntegrationTestRunner({
+  cwd: rootDir,
   testSuite: ({ api }) => {
     describe("Store Products API", () => {
       it("GET /store/products returns a list", async () => {
@@ -21,5 +29,3 @@ medusaIntegrationTestRunner({
     });
   },
 });
-
-jest.setTimeout(60 * 1000);

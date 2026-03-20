@@ -31,7 +31,10 @@ module.exports = (() => {
     case "unit":
       return {
         ...commonConfig,
-        testMatch: ["**/src/**/__tests__/**/*.unit.spec.[jt]s?(x)"],
+        testMatch: [
+          "**/src/**/__tests__/**/*.unit.spec.[jt]s?(x)",
+          "**/__tests__/**/*.unit.spec.[jt]s?(x)",
+        ],
       };
     case "integration:http":
       return {

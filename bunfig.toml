@@ -1,0 +1,3 @@
+[test]
+root = "./backend/__tests__"
+timeout = 30000

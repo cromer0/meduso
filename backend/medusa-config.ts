@@ -1,4 +1,5 @@
-import { loadEnv, defineConfig, Modules } from "@medusajs/framework/utils";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { loadEnv, defineConfig } = require("@medusajs/framework/utils");
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd());
 

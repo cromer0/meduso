@@ -201,20 +201,23 @@ export default async function seedDemoData({ container }: ExecArgs) {
   }
 
   // European fulfillment set
-  const euFulfillmentSet =
-    await fulfillmentModuleService.createFulfillmentSets({
-      name: "European Warehouse delivery",
-      type: "shipping",
-      service_zones: [
+    const euFulfillmentSets =
+      await fulfillmentModuleService.createFulfillmentSets([
         {
-          name: "Europe",
-          geo_zones: europeCountries.map((c) => ({
-            country_code: c,
-            type: "country",
-          })),
+          name: "European Warehouse delivery",
+          type: "shipping",
+          service_zones: [
+            {
+              name: "Europe",
+              geo_zones: europeCountries.map((c) => ({
+                country_code: c,
+                type: "country" as const,
+              })),
+            },
+          ],
         },
-      ],
-    });
+      ]);
+    const euFulfillmentSet = euFulfillmentSets[0];
 
   await link.create({
     [Modules.STOCK_LOCATION]: { stock_location_id: euWarehouse.id },
@@ -222,20 +225,23 @@ export default async function seedDemoData({ container }: ExecArgs) {
   });
 
   // US fulfillment set
-  const usFulfillmentSet =
-    await fulfillmentModuleService.createFulfillmentSets({
-      name: "US Warehouse delivery",
-      type: "shipping",
-      service_zones: [
+    const usFulfillmentSets =
+      await fulfillmentModuleService.createFulfillmentSets([
         {
-          name: "North America",
-          geo_zones: naCountries.map((c) => ({
-            country_code: c,
-            type: "country",
-          })),
+          name: "US Warehouse delivery",
+          type: "shipping",
+          service_zones: [
+            {
+              name: "North America",
+              geo_zones: naCountries.map((c) => ({
+                country_code: c,
+                type: "country" as const,
+              })),
+            },
+          ],
         },
-      ],
-    });
+      ]);
+    const usFulfillmentSet = usFulfillmentSets[0];
 
   await link.create({
     [Modules.STOCK_LOCATION]: { stock_location_id: usWarehouse.id },
@@ -349,7 +355,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
         ],
       },
     });
-    publishableApiKey = key;
+    publishableApiKey = key as any;
   }
 
   await linkSalesChannelsToApiKeyWorkflow(container).run({

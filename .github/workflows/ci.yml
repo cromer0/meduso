@@ -66,6 +66,10 @@ jobs:
         working-directory: ./backend
     env:
       DATABASE_URL: postgres://medusa:medusa@localhost:5432/meduso_test
+      DB_USERNAME: medusa
+      DB_PASSWORD: medusa
+      DB_HOST: localhost
+      DB_PORT: "5432"
       REDIS_URL: redis://localhost:6379
       JWT_SECRET: test-secret
       COOKIE_SECRET: test-secret
