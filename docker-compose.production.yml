@@ -1,0 +1,88 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-medusa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-medusa}
+      POSTGRES_DB: ${POSTGRES_DB:-meduso}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-medusa} -d ${POSTGRES_DB:-meduso}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend-server:
+    build:
+      context: ./backend
+      target: production
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-medusa}:${POSTGRES_PASSWORD:-medusa}@postgres:5432/${POSTGRES_DB:-meduso}
+      REDIS_URL: redis://redis:6379
+      MEDUSA_WORKER_MODE: server
+      DISABLE_MEDUSA_ADMIN: "false"
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      COOKIE_SECRET: ${COOKIE_SECRET:-change-me-in-production}
+      STORE_CORS: ${STORE_CORS:-http://localhost:8000}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000}
+      AUTH_CORS: ${AUTH_CORS:-http://localhost:8000,http://localhost:9000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+
+  backend-worker:
+    build:
+      context: ./backend
+      target: production
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-medusa}:${POSTGRES_PASSWORD:-medusa}@postgres:5432/${POSTGRES_DB:-meduso}
+      REDIS_URL: redis://redis:6379
+      MEDUSA_WORKER_MODE: worker
+      DISABLE_MEDUSA_ADMIN: "true"
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      COOKIE_SECRET: ${COOKIE_SECRET:-change-me-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  storefront:
+    build:
+      context: ./storefront
+      target: production
+    environment:
+      MEDUSA_BACKEND_URL: http://backend-server:9000
+      NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${PUBLISHABLE_KEY:-pk_test}
+      NEXT_PUBLIC_BASE_URL: ${STOREFRONT_URL:-http://localhost:8000}
+      NEXT_PUBLIC_DEFAULT_REGION: ${DEFAULT_REGION:-es}
+    depends_on:
+      - backend-server
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

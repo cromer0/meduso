@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# MedusaJS
+backend/.medusa/
+backend/dist/
+
+# Next.js
+storefront/.next/
+storefront/out/
+
+# Build
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Docker
+postgres_data/
+redis_data/
+
+# Test
+coverage/

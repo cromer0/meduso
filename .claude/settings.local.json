@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(grep -v '^\\\\.$|^\\\\.\\\\.$|^\\\\.git')",
+      "Bash(git -C /Users/cromero/ws/meduso log --oneline -5)",
+      "WebFetch(domain:docs.medusajs.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:immersedincode.io.vn)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Read(//Users/cromero/.nvm/versions/node/**)",
+      "Bash(brew list node)",
+      "Bash(cp -r storefront-tmp/ storefront/)",
+      "Bash(rm -rf storefront/.git storefront-tmp)",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/Cellar/node/24.1.0/bin/**)",
+      "Read(//opt/local/bin/**)",
+      "Bash(/opt/homebrew/bin/node --version)",
+      "Bash(/opt/homebrew/bin/node -e \"process.arch\")",
+      "Bash(/opt/homebrew/bin/node -e \"require\\(''/Users/cromero/ws/meduso/backend/node_modules/@swc/core''\\)\")",
+      "Bash(/opt/homebrew/bin/node -e \"console.log\\(''arch:'', process.arch, ''platform:'', process.platform\\)\")",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash(/opt/homebrew/bin/npm install)",
+      "Read(//opt/homebrew/lib/node_modules/npm/bin/**)",
+      "Bash(/opt/homebrew/bin/npm --version)",
+      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/npm --version)",
+      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" npm install)",
+      "Read(//bin/**)",
+      "Bash(sh --version)",
+      "Bash(PATH=\"/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH\" npm install)",
+      "Bash(PATH=\"/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH\" node -e \":*)",
+      "Bash(ls /Users/cromero/ws/meduso/backend/node_modules/@medusajs/framework/dist/utils*)",
+      "Bash(PATH=\"/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH\" npx medusa --version)"
+    ]
+  }
+}
