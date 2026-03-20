@@ -1,4 +1,4 @@
-# Ensure /bin and Homebrew are always in PATH so sh, node, npm are found
+# Ensure /bin and Homebrew are always in PATH so sh, node, bun are found
 export PATH := /opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$(PATH)
 
 .PHONY: help setup infra-up infra-down infra-reset backend-dev storefront-dev \
@@ -23,13 +23,13 @@ infra-reset: ## Destroy volumes and restart infrastructure
 # ---- Setup ----
 
 setup: infra-up ## First-time project setup (installs deps, migrates DB, seeds data)
-	cd backend && npm install
-	cd storefront && corepack enable && yarn install
+	cd backend && bun install
+	cd storefront && bun install
 	@echo "Waiting for PostgreSQL to be ready..."
 	@until docker compose exec -T postgres pg_isready -U medusa -d meduso > /dev/null 2>&1; do sleep 1; done
-	cd backend && npx medusa db:migrate
-	cd backend && npm run seed
-	cd backend && npx medusa user -e admin@meduso.dev -p admin123
+	cd backend && bunx medusa db:migrate
+	cd backend && bun run seed
+	cd backend && bunx medusa user -e admin@meduso.dev -p admin123
 	@echo ""
 	@echo "============================================"
 	@echo "  Setup complete!"
@@ -41,36 +41,36 @@ setup: infra-up ## First-time project setup (installs deps, migrates DB, seeds d
 # ---- Development ----
 
 backend-dev: ## Start backend with hot-reload (http://localhost:9000)
-	cd backend && npm run dev
+	cd backend && bun run dev
 
 storefront-dev: ## Start storefront with hot-reload (http://localhost:8000)
-	cd storefront && npm run dev
+	cd storefront && bun run dev
 
 # ---- Database ----
 
 migrate: ## Run database migrations
-	cd backend && npx medusa db:migrate
+	cd backend && bunx medusa db:migrate
 
 seed: ## Seed the database with demo data
-	cd backend && npm run seed
+	cd backend && bun run seed
 
 # ---- Testing ----
 
 test-unit: ## Run unit tests
-	cd backend && npm run test:unit
+	cd backend && bun run test:unit
 
 test-integration: ## Run integration tests (requires PostgreSQL + Redis)
-	cd backend && npm run test:integration:http
+	cd backend && bun run test:integration:http
 
 test: test-unit test-integration ## Run all tests
 
 # ---- Build ----
 
 build-backend: ## Build backend for production
-	cd backend && npx medusa build
+	cd backend && bunx medusa build
 
 build-storefront: ## Build storefront for production
-	cd storefront && npm run build
+	cd storefront && bun run build
 
 build: build-backend build-storefront ## Build everything
 

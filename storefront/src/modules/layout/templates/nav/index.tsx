@@ -5,6 +5,7 @@ import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { getTranslations } from "@lib/translations"
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
 
@@ -14,6 +15,8 @@ export default async function Nav() {
     listLocales(),
     getLocale(),
   ])
+
+  const t = getTranslations(currentLocale)
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
@@ -42,7 +45,7 @@ export default async function Nav() {
                 href="/account"
                 data-testid="nav-account-link"
               >
-                Account
+                {t.nav.account}
               </LocalizedClientLink>
             </div>
             <Suspense
@@ -52,7 +55,7 @@ export default async function Nav() {
                   href="/cart"
                   data-testid="nav-cart-link"
                 >
-                  Cart (0)
+                  {t.nav.cart} (0)
                 </LocalizedClientLink>
               }
             >

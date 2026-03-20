@@ -37,3 +37,6 @@ redis_data/
 
 # Test
 coverage/
+
+# Static assets (local file uploads)
+backend/static/

@@ -1,52 +1,51 @@
-# Meduso - E-Commerce con MedusaJS v2
+# Meduso - E-Commerce with MedusaJS v2
 
-E-commerce completo construido con [MedusaJS v2](https://medusajs.com/) (backend) y [Next.js 15](https://nextjs.org/) (storefront).
+Full-featured e-commerce built with [MedusaJS v2](https://medusajs.com/) (backend) and [Next.js 15](https://nextjs.org/) (storefront).
 
-## Requisitos previos
+## Prerequisites
 
-- **Node.js** >= 20 (recomendado v22 LTS)
-- **Docker** y **Docker Compose** (para PostgreSQL y Redis)
-- **yarn** (corepack lo activa automáticamente para el storefront)
+- **Bun** >= 1.0 (Runtime and package manager)
+- **Docker** and **Docker Compose** (for PostgreSQL and Redis)
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/cromer0/meduso.git
 cd meduso
-make setup        # Levanta infra, instala deps, migra DB, seedea datos, crea admin
-make backend-dev  # Terminal 1: backend en http://localhost:9000
-make storefront-dev  # Terminal 2: storefront en http://localhost:8000
+make setup        # Start infra, install deps, migrate DB, seed data, create admin
+make backend-dev  # Terminal 1: backend at http://localhost:9000
+make storefront-dev  # Terminal 2: storefront at http://localhost:8000
 ```
 
 **Admin dashboard:** http://localhost:9000/app
 - Email: `admin@meduso.dev`
 - Password: `admin123`
 
-## Arquitectura
+## Architecture
 
 ```
 meduso/
-├── backend/          # MedusaJS v2 (API REST + Admin dashboard)
-├── storefront/       # Next.js 15 (tienda pública)
-├── docker-compose.yml              # Infra local (PostgreSQL + Redis)
-├── docker-compose.production.yml   # Stack producción completo
-└── Makefile                        # Comandos de desarrollo
+├── backend/          # MedusaJS v2 (REST API + Admin dashboard)
+├── storefront/       # Next.js 15 (public shop)
+├── docker-compose.yml              # Local infra (PostgreSQL + Redis)
+├── docker-compose.production.yml   # Full production stack
+└── Makefile                        # Development commands
 ```
 
-### Stack tecnológico
+### Tech Stack
 
-| Componente | Tecnología |
+| Component | Technology |
 |-----------|-----------|
 | Backend | MedusaJS v2 (Express.js) |
-| Base de datos | PostgreSQL 16 |
-| Cache / Sesiones | Redis 7 |
-| Admin | Dashboard MedusaJS (Vite) |
+| Database | PostgreSQL 16 |
+| Cache / Events | Redis 7 |
+| Admin | MedusaJS Dashboard (Vite) |
 | Storefront | Next.js 15 (App Router, Turbopack) |
-| Estilos | Tailwind CSS |
+| Styling | Tailwind CSS |
 | Tests | Jest + @medusajs/test-utils |
 | CI/CD | GitHub Actions |
 
-### Diagrama de producción
+### Production Diagram
 
 ```
         ┌──────────────┐
@@ -60,7 +59,7 @@ meduso/
     └──────────┼──────────┘
          ┌─────┴─────┐
     ┌────┴────┐ ┌────┴────┐
-    │PostgreSQL│ │  Redis  │    ← Estado compartido
+    │PostgreSQL│ │  Redis  │    ← Shared state
     └────┬────┘ └────┬────┘
          │           │
     ┌────┴────┐ ┌────┴────┐
@@ -68,112 +67,112 @@ meduso/
     └─────────┘ └─────────┘
 ```
 
-## Comandos disponibles
+## Available Commands
 
-| Comando | Descripción |
+| Command | Description |
 |---------|------------|
-| `make setup` | Setup completo: infra + deps + migraciones + seed + admin |
-| `make infra-up` | Levantar PostgreSQL y Redis |
-| `make infra-down` | Parar contenedores de infraestructura |
-| `make infra-reset` | Destruir volúmenes y reiniciar infra |
-| `make backend-dev` | Backend con hot-reload (`:9000`) |
-| `make storefront-dev` | Storefront con hot-reload (`:8000`) |
-| `make migrate` | Ejecutar migraciones de base de datos |
-| `make seed` | Seedear datos de demostración |
-| `make test` | Ejecutar todos los tests |
-| `make test-unit` | Solo tests unitarios |
-| `make test-integration` | Solo tests de integración |
-| `make build` | Build de producción (backend + storefront) |
-| `make prod-up` | Levantar stack de producción en Docker |
-| `make prod-down` | Parar stack de producción |
-| `make clean` | Limpiar artefactos de build |
+| `make setup` | Full setup: infra + deps + migrations + seed + admin |
+| `make infra-up` | Start PostgreSQL and Redis |
+| `make infra-down` | Stop infrastructure containers |
+| `make infra-reset` | Destroy volumes and restart infra |
+| `make backend-dev` | Backend with hot-reload (`:9000`) |
+| `make storefront-dev` | Storefront with hot-reload (`:8000`) |
+| `make migrate` | Run database migrations |
+| `make seed` | Seed demonstration data |
+| `make test` | Run all tests |
+| `make test-unit` | Unit tests only |
+| `make test-integration` | Integration tests only |
+| `make build` | Production build (backend + storefront) |
+| `make prod-up` | Start production stack in Docker |
+| `make prod-down` | Stop production stack |
+| `make clean` | Clean build artifacts |
 
-## Desarrollo local
+## Local Development
 
-### Estructura del desarrollo
+### Development Structure
 
-En desarrollo local, **PostgreSQL y Redis corren en Docker** mientras que el backend y storefront corren nativamente en tu máquina. Esto ofrece hot-reload instantáneo sin latencia de sincronización de archivos.
+In local development, **PostgreSQL and Redis run in Docker** while the backend and storefront run natively on your machine. This offers instant hot-reload without file synchronization latency.
 
 ```
 Docker:  PostgreSQL (:5432) + Redis (:6379)
-Nativo:  Backend (:9000) + Storefront (:8000)
+Native:  Backend (:9000) + Storefront (:8000)
 ```
 
-### Workflow diario
+### Daily Workflow
 
 ```bash
-make infra-up         # Si no están corriendo ya
+make infra-up         # If not already running
 make backend-dev      # Terminal 1
 make storefront-dev   # Terminal 2
 ```
 
-### Variables de entorno
+### Environment Variables
 
-- `backend/.env` — configuración del backend (creado desde `.env.template`)
-- `storefront/.env.local` — configuración del storefront (creado desde `.env.template`)
+- `backend/.env` — backend configuration (created from `.env.template`)
+- `storefront/.env.local` — storefront configuration (created from `.env.template`)
 
-## Gestión de productos y precios
+## Product and Price Management
 
-La gestión se realiza desde el **Admin dashboard** (http://localhost:9000/app) sin necesidad de intervención técnica:
+Management is done from the **Admin dashboard** (http://localhost:9000/app) without the need for technical intervention:
 
-- **Productos**: Crear/editar productos, variantes (talla, color), imágenes y descripciones
-- **Precios**: Configurar precios por moneda (EUR, USD) y por región
-- **Categorías**: Organizar productos en categorías
-- **Envío**: Configurar tarifas de envío por zona geográfica
-- **Regiones**: Gestionar regiones con sus monedas y países
-- **Inventario**: Controlar stock por almacén y producto
+- **Products**: Create/edit products, variants (size, color), images, and descriptions
+- **Prices**: Configure prices by currency (EUR, USD) and region
+- **Categories**: Organize products into categories
+- **Shipping**: Configure shipping rates by geographic zone
+- **Regions**: Manage regions with their currencies and countries
+- **Inventory**: Control stock by warehouse and product
 
-## Datos de demostración (Seed)
+## Demo Data (Seed)
 
-El seed incluye datos listos para usar:
+The seed data includes everything ready to use:
 
-| Tipo | Datos |
+| Type | Data |
 |------|-------|
-| **Regiones** | Europa (ES, FR, DE, IT, PT, NL, BE) y Norteamérica (US, CA) |
-| **Monedas** | EUR (por defecto) y USD |
-| **Almacenes** | European Warehouse (Madrid) y US Warehouse (New York) |
-| **Envío** | Estándar (4.99€) y Express (9.99€) por región |
-| **Categorías** | Camisetas, Sudaderas, Pantalones, Accesorios |
-| **Productos** | 8 productos con variantes de talla y color |
+| **Regions** | Europe (ES, FR, DE, IT, PT, NL, BE) and North America (US, CA) |
+| **Currencies** | EUR (default) and USD |
+| **Warehouses** | European Warehouse (Madrid) and US Warehouse (New York) |
+| **Shipping** | Standard (4.99€) and Express (9.99€) per region |
+| **Categories** | T-Shirts, Hoodies, Pants, Accessories |
+| **Products** | 8 products with size and color variants |
 
-Para regenerar los datos:
+To regenerate data:
 
 ```bash
-make infra-reset   # Limpia la DB
-make migrate       # Re-crea tablas
-make seed          # Re-seedea datos
+make infra-reset   # Clean DB
+make migrate       # Re-create tables
+make seed          # Re-seed data
 ```
 
 ## Testing
 
-### Tests locales
+### Local Tests
 
 ```bash
-make test              # Todos los tests
-make test-unit         # Tests unitarios (sin DB)
-make test-integration  # Tests de integración (requiere PostgreSQL + Redis)
+make test              # All tests
+make test-unit         # Unit tests (no DB)
+make test-integration  # Integration tests (requires PostgreSQL + Redis)
 ```
 
-### Tipos de tests
+### Test Types
 
-| Tipo | Ubicación | Descripción |
+| Type | Location | Description |
 |------|-----------|------------|
-| Unit | `src/**/__tests__/*.unit.spec.ts` | Tests unitarios de lógica de negocio |
-| Integration HTTP | `integration-tests/http/*.spec.ts` | Tests de endpoints API con DB real |
-| Integration Modules | `src/modules/*/__tests__/*.spec.ts` | Tests de módulos custom |
+| Unit | `src/**/__tests__/*.unit.spec.ts` | Business logic unit tests |
+| Integration HTTP | `integration-tests/http/*.spec.ts` | API endpoint tests with real DB |
+| Integration Modules | `src/modules/*/__tests__/*.spec.ts` | Custom module tests |
 
 ### CI (GitHub Actions)
 
-El pipeline ejecuta 4 jobs en paralelo en cada push/PR a `main`:
+The pipeline runs 4 jobs in parallel on every push/PR to `main`:
 
 1. **Typecheck** — `tsc --noEmit`
-2. **Unit tests** — Jest sin base de datos
-3. **Integration tests** — Jest con PostgreSQL y Redis como service containers
-4. **Storefront build** — Verifica que Next.js compila correctamente
+2. **Unit tests** — Jest without database
+3. **Integration tests** — Jest with PostgreSQL and Redis as service containers
+4. **Storefront build** — Verifies Next.js compilation
 
-## Docker y producción
+## Docker and Production
 
-### Build de imágenes
+### Image Build
 
 ```bash
 # Backend
@@ -183,59 +182,59 @@ docker build --target production -t meduso-backend ./backend
 docker build --target production -t meduso-storefront ./storefront
 ```
 
-### Stack de producción
+### Production Stack
 
 ```bash
-make prod-up    # Levanta todo: postgres, redis, 2x server, worker, storefront
-make prod-down  # Para todo
+make prod-up    # Starts everything: postgres, redis, 2x server, worker, storefront
+make prod-down  # Stops everything
 ```
 
-El `docker-compose.production.yml` incluye:
+The `docker-compose.production.yml` includes:
 
-- **backend-server** x2 réplicas — API + Admin (stateless, escalable horizontalmente)
-- **backend-worker** x1 — Procesa tareas en background (subscribers, jobs)
-- **storefront** — Next.js en modo standalone
-- **postgres** — Base de datos con volumen persistente
+- **backend-server** x2 replicas — API + Admin (stateless, horizontally scalable)
+- **backend-worker** x1 — Background task processing (subscribers, jobs)
+- **storefront** — Next.js in standalone mode
+- **postgres** — Database with persistent volume
 - **redis** — Cache, event bus, workflow engine, locking
 
-### Escalado horizontal
+### Horizontal Scaling
 
-Los servidores backend son stateless. Para escalar:
+Backend servers are stateless. To scale:
 
-1. Aumentar `replicas` en `docker-compose.production.yml`
-2. O desplegar más instancias en Kubernetes/ECS detrás de un load balancer
+1. Increase `replicas` in `docker-compose.production.yml`
+2. Or deploy more instances in Kubernetes/ECS behind a load balancer
 
-**Requisitos para multi-instancia:**
-- Redis obligatorio (cache, event bus, workflow engine, locking)
-- Las migraciones se ejecutan una vez por deploy, no por instancia
+**Multi-instance requirements:**
+- Mandatory Redis (cache, event bus, workflow engine, locking)
+- Migrations are run once per deploy, not per instance
 
-### Variables de producción
+### Production Variables
 
-Crea un `.env` en la raíz con:
+Create a `.env` in the root with:
 
 ```bash
 POSTGRES_USER=medusa
-POSTGRES_PASSWORD=<contraseña-segura>
+POSTGRES_PASSWORD=<secure-password>
 POSTGRES_DB=meduso
-JWT_SECRET=<secreto-jwt>
-COOKIE_SECRET=<secreto-cookie>
-STORE_CORS=https://tu-dominio.com
-ADMIN_CORS=https://admin.tu-dominio.com
-AUTH_CORS=https://tu-dominio.com,https://admin.tu-dominio.com
-PUBLISHABLE_KEY=<tu-publishable-key>
-STOREFRONT_URL=https://tu-dominio.com
+JWT_SECRET=<jwt-secret>
+COOKIE_SECRET=<cookie-secret>
+STORE_CORS=https://your-domain.com
+ADMIN_CORS=https://admin.your-domain.com
+AUTH_CORS=https://your-domain.com,https://admin.your-domain.com
+PUBLISHABLE_KEY=<your-publishable-key>
+STOREFRONT_URL=https://your-domain.com
 ```
 
-## Estructura de directorios del backend
+## Backend Directory Structure
 
 ```
 backend/src/
-├── admin/         # Widgets y rutas custom del admin dashboard
-├── api/           # API routes custom (REST endpoints)
-├── jobs/          # Tareas programadas (cron jobs)
-├── links/         # Definiciones de links entre módulos
-├── modules/       # Módulos de negocio custom
-├── scripts/       # Scripts CLI (seed, migraciones custom)
-├── subscribers/   # Event listeners (reaccionar a eventos del sistema)
-└── workflows/     # Workflows custom (lógica de negocio transaccional)
+├── admin/         # Admin dashboard custom widgets and routes
+├── api/           # Custom API routes (REST endpoints)
+├── jobs/          # Scheduled tasks (cron jobs)
+├── links/         # Link definitions between modules
+├── modules/       # Custom business modules
+├── scripts/       # CLI scripts (seed, custom migrations)
+├── subscribers/   # Event listeners (react to system events)
+└── workflows/     # Custom workflows (transactional business logic)
 ```

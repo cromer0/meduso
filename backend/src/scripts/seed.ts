@@ -141,7 +141,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
           address: {
             city: "Madrid",
             country_code: "ES",
-            address_1: "Calle Gran Vía 1",
+            address_1: "Gran Via 1",
           },
         },
         {
@@ -251,14 +251,14 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: [
       // EU Standard
       {
-        name: "Envío Estándar",
+        name: "Standard Shipping (EU)",
         price_type: "flat",
         provider_id: "manual_manual",
         service_zone_id: euFulfillmentSet.service_zones[0].id,
         shipping_profile_id: shippingProfile.id,
         type: {
           label: "Standard",
-          description: "Entrega en 3-5 días laborables.",
+          description: "Delivery in 3-5 business days.",
           code: "standard",
         },
         prices: [
@@ -270,14 +270,14 @@ export default async function seedDemoData({ container }: ExecArgs) {
       },
       // EU Express
       {
-        name: "Envío Express",
+        name: "Express Shipping (EU)",
         price_type: "flat",
         provider_id: "manual_manual",
         service_zone_id: euFulfillmentSet.service_zones[0].id,
         shipping_profile_id: shippingProfile.id,
         type: {
           label: "Express",
-          description: "Entrega en 1-2 días laborables.",
+          description: "Delivery in 1-2 business days.",
           code: "express",
         },
         prices: [
@@ -289,7 +289,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
       },
       // US Standard
       {
-        name: "Standard Shipping",
+        name: "Standard Shipping (US)",
         price_type: "flat",
         provider_id: "manual_manual",
         service_zone_id: usFulfillmentSet.service_zones[0].id,
@@ -308,7 +308,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
       },
       // US Express
       {
-        name: "Express Shipping",
+        name: "Express Shipping (US)",
         price_type: "flat",
         provider_id: "manual_manual",
         service_zone_id: usFulfillmentSet.service_zones[0].id,
@@ -364,10 +364,10 @@ export default async function seedDemoData({ container }: ExecArgs) {
   ).run({
     input: {
       product_categories: [
-        { name: "Camisetas", is_active: true },
-        { name: "Sudaderas", is_active: true },
-        { name: "Pantalones", is_active: true },
-        { name: "Accesorios", is_active: true },
+        { name: "T-Shirts", is_active: true },
+        { name: "Hoodies", is_active: true },
+        { name: "Pants", is_active: true },
+        { name: "Accessories", is_active: true },
       ],
     },
   });
@@ -426,69 +426,69 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       products: [
         {
-          title: "Camiseta Clásica",
-          handle: "camiseta-clasica",
+          title: "Classic T-Shirt",
+          handle: "classic-t-shirt",
           description:
-            "Camiseta de algodón 100% con corte clásico. Suave al tacto y perfecta para el día a día.",
-          category_ids: [catId("Camisetas")],
+            "100% cotton t-shirt with a classic cut. Soft to the touch and perfect for everyday wear.",
+          category_ids: [catId("T-Shirts")],
           weight: 200,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           options: [
             { title: "Size", values: sizeValues },
-            { title: "Color", values: ["Negro", "Blanco"] },
+            { title: "Color", values: ["Black", "White"] },
           ],
-          variants: sizeColorVariants("CCLASICA", ["Negro", "Blanco"], 2499, 2999),
+          variants: sizeColorVariants("CCLASIC", ["Black", "White"], 2499, 2999),
           sales_channels: salesChannels,
         },
         {
-          title: "Camiseta Premium",
-          handle: "camiseta-premium",
+          title: "Premium T-Shirt",
+          handle: "premium-t-shirt",
           description:
-            "Camiseta de algodón orgánico premium. Tejido denso y acabado superior.",
-          category_ids: [catId("Camisetas")],
+            "Premium organic cotton t-shirt. Dense fabric and superior finish.",
+          category_ids: [catId("T-Shirts")],
           weight: 250,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           options: [
             { title: "Size", values: sizeValues },
-            { title: "Color", values: ["Azul", "Rojo"] },
+            { title: "Color", values: ["Blue", "Red"] },
           ],
-          variants: sizeColorVariants("CPREMIUM", ["Azul", "Rojo"], 3499, 3999),
+          variants: sizeColorVariants("CPREMIUM", ["Blue", "Red"], 3499, 3999),
           sales_channels: salesChannels,
         },
         {
-          title: "Sudadera Básica",
-          handle: "sudadera-basica",
+          title: "Basic Sweatshirt",
+          handle: "basic-sweatshirt",
           description:
-            "Sudadera sin capucha de algodón cepillado. Cálida y cómoda.",
-          category_ids: [catId("Sudaderas")],
+            "Brushed cotton sweatshirt without hood. Warm and comfortable.",
+          category_ids: [catId("Hoodies")],
           weight: 450,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           options: sizesOnly,
-          variants: sizeVariants("SBASICA", 4999, 5499),
+          variants: sizeVariants("SBASIC", 4999, 5499),
           sales_channels: salesChannels,
         },
         {
-          title: "Sudadera Con Capucha",
-          handle: "sudadera-capucha",
+          title: "Hoodie",
+          handle: "hoodie",
           description:
-            "Hoodie de algodón orgánico con bolsillo canguro y capucha ajustable.",
-          category_ids: [catId("Sudaderas")],
+            "Organic cotton hoodie with kangaroo pocket and adjustable hood.",
+          category_ids: [catId("Hoodies")],
           weight: 550,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
           options: sizesOnly,
-          variants: sizeVariants("SCAPUCHA", 5999, 6499),
+          variants: sizeVariants("SHOODIE", 5999, 6499),
           sales_channels: salesChannels,
         },
         {
-          title: "Pantalón Jogger",
-          handle: "pantalon-jogger",
+          title: "Jogger Pants",
+          handle: "jogger-pants",
           description:
-            "Pantalón jogger de corte slim con puños elásticos y cintura ajustable.",
-          category_ids: [catId("Pantalones")],
+            "Slim cut jogger pants with elastic cuffs and adjustable waist.",
+          category_ids: [catId("Pants")],
           weight: 400,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
@@ -497,11 +497,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
           sales_channels: salesChannels,
         },
         {
-          title: "Shorts Deportivos",
-          handle: "shorts-deportivos",
+          title: "Sports Shorts",
+          handle: "sports-shorts",
           description:
-            "Shorts ligeros con tejido transpirable. Ideales para deporte y tiempo libre.",
-          category_ids: [catId("Pantalones")],
+            "Lightweight shorts with breathable fabric. Ideal for sports and leisure.",
+          category_ids: [catId("Pants")],
           weight: 200,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
@@ -510,29 +510,29 @@ export default async function seedDemoData({ container }: ExecArgs) {
           sales_channels: salesChannels,
         },
         {
-          title: "Gorra Logo",
-          handle: "gorra-logo",
+          title: "Logo Cap",
+          handle: "logo-cap",
           description:
-            "Gorra de algodón con logo bordado y cierre ajustable trasero.",
-          category_ids: [catId("Accesorios")],
+            "Cotton cap with embroidered logo and adjustable back closure.",
+          category_ids: [catId("Accessories")],
           weight: 100,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
-          options: [{ title: "Color", values: ["Negro", "Blanco"] }],
+          options: [{ title: "Color", values: ["Black", "White"] }],
           variants: [
             {
-              title: "Negro",
-              sku: "GORRA-NEGRO",
-              options: { Color: "Negro" },
+              title: "Black",
+              sku: "CAP-BLACK",
+              options: { Color: "Black" },
               prices: [
                 { amount: 1999, currency_code: "eur" },
                 { amount: 2299, currency_code: "usd" },
               ],
             },
             {
-              title: "Blanco",
-              sku: "GORRA-BLANCO",
-              options: { Color: "Blanco" },
+              title: "White",
+              sku: "CAP-WHITE",
+              options: { Color: "White" },
               prices: [
                 { amount: 1999, currency_code: "eur" },
                 { amount: 2299, currency_code: "usd" },
@@ -545,17 +545,17 @@ export default async function seedDemoData({ container }: ExecArgs) {
           title: "Tote Bag",
           handle: "tote-bag",
           description:
-            "Bolsa tote de algodón reciclado con asas reforzadas. Perfecta para el día a día.",
-          category_ids: [catId("Accesorios")],
+            "Recycled cotton tote bag with reinforced handles. Perfect for everyday use.",
+          category_ids: [catId("Accessories")],
           weight: 150,
           status: ProductStatus.PUBLISHED,
           shipping_profile_id: shippingProfile.id,
-          options: [{ title: "Color", values: ["Negro"] }],
+          options: [{ title: "Color", values: ["Black"] }],
           variants: [
             {
-              title: "Negro",
-              sku: "TOTE-NEGRO",
-              options: { Color: "Negro" },
+              title: "Black",
+              sku: "TOTE-BLACK",
+              options: { Color: "Black" },
               prices: [
                 { amount: 1499, currency_code: "eur" },
                 { amount: 1799, currency_code: "usd" },

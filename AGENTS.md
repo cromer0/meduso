@@ -1,19 +1,19 @@
-# AGENTS.md — Guía para IAs que modifiquen este proyecto
+# AGENTS.md — Guide for AI Agents Modifying This Project
 
-Este documento está diseñado para que cualquier agente de IA (Claude, Copilot, Cursor, etc.) pueda entender rápidamente el proyecto y hacer modificaciones correctas.
+This document is designed for any AI agent (Claude, Copilot, Cursor, etc.) to quickly understand the project and make correct modifications.
 
-## Visión general
+## Overview
 
-Meduso es un e-commerce construido con:
+Meduso is an e-commerce platform built with:
 
-- **Backend**: MedusaJS v2 (`backend/`) — framework modular de comercio electrónico basado en Express.js
-- **Storefront**: Next.js 15 (`storefront/`) — tienda pública con App Router y Turbopack
-- **Base de datos**: PostgreSQL 16
-- **Cache/Events**: Redis 7
-- **Tests**: Jest + @medusajs/test-utils
-- **CI**: GitHub Actions (`.github/workflows/ci.yml`)
+- **Backend**: MedusaJS v2 (`backend/`) — modular commerce framework based on Express.js.
+- **Storefront**: Next.js 15 (`storefront/`) — public store with App Router and Turbopack.
+- **Database**: PostgreSQL 16.
+- **Cache/Events**: Redis 7.
+- **Tests**: Jest + @medusajs/test-utils.
+- **CI**: GitHub Actions (`.github/workflows/ci.yml`).
 
-## Estructura del proyecto
+## Project Structure
 
 ```
 meduso/
@@ -43,26 +43,26 @@ meduso/
 └── .github/workflows/ci.yml   # CI pipeline
 ```
 
-## Cómo funciona MedusaJS v2
+## How MedusaJS v2 Works
 
-### Conceptos clave
+### Key Concepts
 
-- **Modules**: Unidades autónomas que gestionan un dominio (Product, Cart, Order, etc.). Sin dependencias entre sí.
-- **Workflows**: Funciones transaccionales que orquestan operaciones entre módulos. Usan compensaciones para rollback.
-- **Core-flows**: Workflows prebuilt por Medusa (`@medusajs/medusa/core-flows`). Úsalos antes de crear workflows custom.
-- **Subscribers**: Listeners de eventos (`product.created`, `order.placed`, etc.).
-- **Links**: Conexiones entre módulos sin foreign keys. Se crean con `container.resolve(ContainerRegistrationKeys.LINK)`.
-- **API Routes**: Endpoints REST en `src/api/`. Usan convención de archivos: `src/api/store/custom/route.ts`.
-- **Admin customizations**: Widgets y páginas en `src/admin/`. Se inyectan en el dashboard automáticamente.
+- **Modules**: Self-contained units managing a specific domain (Product, Cart, Order, etc.). No direct dependencies between modules.
+- **Workflows**: Transactional functions that orchestrate operations across modules. They use compensations for rollbacks.
+- **Core-flows**: Prebuilt workflows provided by Medusa (`@medusajs/medusa/core-flows`). Use these before creating custom workflows.
+- **Subscribers**: Event listeners (`product.created`, `order.placed`, etc.).
+- **Links**: Soft connections between modules without foreign keys. Created using `container.resolve(ContainerRegistrationKeys.LINK)`.
+- **API Routes**: REST endpoints in `src/api/`. Files follow the convention: `src/api/store/custom/route.ts`.
+- **Admin customizations**: Widgets and pages in `src/admin/`. They are automatically injected into the dashboard.
 
-### Dependency injection
+### Dependency Injection
 
-MedusaJS usa un contenedor IoC. Para resolver servicios:
+MedusaJS uses an IoC container. To resolve services:
 
 ```typescript
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
 
-// En un API route, subscriber, o workflow step:
+// In an API route, subscriber, or workflow step:
 const productService = container.resolve(Modules.PRODUCT)
 const query = container.resolve(ContainerRegistrationKeys.QUERY)
 const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
@@ -70,106 +70,105 @@ const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
 
 ### ORM
 
-MedusaJS v2 usa **MikroORM** (no TypeORM). No accedas a la DB directamente — usa siempre los servicios de módulo o `query.graph()`.
+MedusaJS v2 uses **MikroORM** (not TypeORM). Do not access the DB directly — always use module services or `query.graph()`.
 
-## Cómo añadir cosas
+## How to Add Features
 
-### Nuevo producto (vía seed)
+### New Product (via seed)
 
-Editar `backend/src/scripts/seed.ts` y añadir al array de `createProductsWorkflow`. Luego: `make infra-reset && make migrate && make seed`.
+Edit `backend/src/scripts/seed.ts` and add to the `createProductsWorkflow` array. Then run: `make infra-reset && make migrate && make seed`.
 
-### Nuevo módulo custom
+### New Custom Module
 
-1. Crear directorio en `backend/src/modules/<nombre>/`
-2. Estructura mínima:
+1. Create a directory in `backend/src/modules/<name>/`.
+2. Minimal structure:
    ```
    modules/custom-module/
    ├── index.ts          # Module export
    ├── service.ts        # Business logic
    └── models/           # Data models (MikroORM entities)
    ```
-3. Registrar en `backend/medusa-config.ts` → `modules: [...]`
+3. Register in `backend/medusa-config.ts` → `modules: [...]`.
 
-### Nuevo workflow
+### New Workflow
 
-1. Crear en `backend/src/workflows/<nombre>.ts`
-2. Usar `createWorkflow` y `createStep` de `@medusajs/framework/workflows-sdk`
-3. Cada step debe tener una función de compensación para rollback
+1. Create in `backend/src/workflows/<name>.ts`.
+2. Use `createWorkflow` and `createStep` from `@medusajs/framework/workflows-sdk`.
+3. Each step must have a compensation function for rollback.
 
-### Nueva API route
+### New API Route
 
-1. Crear archivo en `backend/src/api/store/<ruta>/route.ts` (store API) o `backend/src/api/admin/<ruta>/route.ts` (admin API)
-2. Exportar funciones con nombre del método HTTP: `GET`, `POST`, `PUT`, `DELETE`
-3. La validación se hace con `validateAndTransformBody` y `validateAndTransformQuery`
+1. Create a file in `backend/src/api/store/<path>/route.ts` (store API) or `backend/src/api/admin/<path>/route.ts` (admin API).
+2. Export functions named after HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
+3. Validation is handled using `validateAndTransformBody` and `validateAndTransformQuery`.
 
-### Nuevo subscriber
+### New Subscriber
 
-1. Crear en `backend/src/subscribers/<nombre>.ts`
-2. Exportar default una función y `config` con el evento a escuchar
+1. Create in `backend/src/subscribers/<name>.ts`.
+2. Export a default function and a `config` with the event to listen for.
 
-### Nuevo test
+### New Test
 
-- **Unit test**: `backend/src/<area>/__tests__/<nombre>.unit.spec.ts`
-- **Integration test**: `backend/integration-tests/http/<nombre>.spec.ts`
-- Usar `medusaIntegrationTestRunner` para tests de integración (levanta Medusa completo con DB temporal)
+- **Unit test**: `backend/src/<area>/__tests__/<name>.unit.spec.ts`.
+- **Integration test**: `backend/integration-tests/http/<name>.spec.ts`.
+- Use `medusaIntegrationTestRunner` for integration tests (it spins up a full Medusa instance with a temporary DB).
 
-## Configuración importante
+## Important Configuration
 
 ### `backend/medusa-config.ts`
 
-Archivo central. Controla:
-- `databaseUrl` — conexión PostgreSQL
-- `redisUrl` — conexión Redis (activa módulos distribuidos)
-- `http.storeCors/adminCors/authCors` — CORS
-- `workerMode` — `"shared"` (dev), `"server"` o `"worker"` (producción)
-- `admin.disable` — desactivar dashboard en workers
-- `modules` — lista de módulos custom y Redis-backed modules
+Central configuration file. Controls:
+- `databaseUrl` — PostgreSQL connection.
+- `redisUrl` — Redis connection (enables distributed modules).
+- `http.storeCors/adminCors/authCors` — CORS settings.
+- `workerMode` — `"shared"` (dev), `"server"`, or `"worker"` (production).
+- `admin.disable` — disable dashboard in workers.
+- `modules` — list of custom and Redis-backed modules.
 
-### Variables de entorno
+### Environment Variables
 
-| Variable | Uso |
+| Variable | Usage |
 |----------|-----|
 | `DATABASE_URL` | PostgreSQL connection string |
-| `REDIS_URL` | Redis connection (activa cache, events, workflows, locking distribuido) |
+| `REDIS_URL` | Redis connection (enables cache, events, workflows, locking) |
 | `MEDUSA_WORKER_MODE` | `shared` / `server` / `worker` |
-| `DISABLE_MEDUSA_ADMIN` | `true` para instancias worker |
-| `JWT_SECRET` / `COOKIE_SECRET` | Secretos de autenticación |
-| `STORE_CORS` / `ADMIN_CORS` / `AUTH_CORS` | Orígenes permitidos |
+| `DISABLE_MEDUSA_ADMIN` | `true` for worker instances |
+| `JWT_SECRET` / `COOKIE_SECRET` | Authentication secrets |
 
-## Comandos clave
+### Key Commands
 
 ```bash
-make setup              # Setup completo desde cero
-make backend-dev        # Desarrollo backend (hot-reload)
-make storefront-dev     # Desarrollo storefront (hot-reload)
-make test               # Ejecutar todos los tests
-make test-unit          # Solo tests unitarios
-make test-integration   # Solo tests de integración
-make seed               # Seedear datos demo
-make migrate            # Ejecutar migraciones
-make build              # Build producción
-make prod-up            # Levantar stack producción
+make setup              # Full project setup from scratch
+make backend-dev        # Backend development (hot-reload)
+make storefront-dev     # Storefront development (hot-reload)
+make test               # Run all tests
+make test-unit          # Unit tests only
+make test-integration   # Integration tests only
+make seed               # Seed demo data
+make migrate            # Run migrations
+make build              # Production build
+make prod-up            # Start production stack
 ```
 
-## Qué NO hacer
+## What NOT to Do
 
-1. **No modificar archivos en `.medusa/`** — es directorio generado por el build
-2. **No acceder a la DB directamente** con queries SQL o MikroORM — usar servicios de módulo
-3. **No crear foreign keys entre módulos** — usar Links en su lugar
-4. **No instalar dependencias con `npm` en `storefront/`** — usa `yarn` (el proyecto usa yarn 4)
-5. **No hardcodear URLs o secretos** — usar variables de entorno
-6. **No ejecutar migraciones en cada instancia** — solo una vez por deploy
-7. **No usar TypeORM** — MedusaJS v2 usa MikroORM
-8. **No ignorar las compensaciones en workflows** — cada step debe poder revertirse
-9. **No modificar `node_modules/`** ni hacer patches manuales
-10. **No añadir `console.log`** — usar el logger del contenedor (`ContainerRegistrationKeys.LOGGER`)
+1. **Do not modify files in `.medusa/`** — it is a build-generated directory.
+2. **Do not access the DB directly** with SQL queries or MikroORM — use module services.
+3. **Do not create foreign keys between modules** — use Links instead.
+4. **Do not install dependencies with npm or yarn** — always use **Bun**.
+5. **Do not hardcode URLs or secrets** — use environment variables.
+6. **Do not run migrations on every instance** — only once per deployment.
+7. **Do not use TypeORM** — MedusaJS v2 uses MikroORM.
+8. **Do not ignore compensations in workflows** — every step must be reversible.
+9. **Do not modify `node_modules/`** or make manual patches.
+10. **Do not add `console.log`** — use the container logger (`ContainerRegistrationKeys.LOGGER`).
 
-## Errores comunes
+## Common Errors
 
-| Error | Causa | Solución |
+| Error | Cause | Solution |
 |-------|-------|---------|
-| `MetadataStorage` error en tests | MikroORM cache corrupto | Verificar que `integration-tests/setup.js` hace `MetadataStorage.clear()` |
-| CORS error en storefront | CORS mal configurado | Verificar `STORE_CORS` en backend `.env` incluye la URL del storefront |
-| Publishable key error | Key no vinculada | En Admin > Settings > API Keys, vincular la key al sales channel |
-| Products not showing | Sales channel no vinculado | Asegurar que productos están vinculados al sales channel default |
-| `cannot find module .medusa/types` | Tipos no generados | Ejecutar `npx medusa develop` o `npx medusa build` al menos una vez |
+| `MetadataStorage` error in tests | Corrupt MikroORM cache | Check that `integration-tests/setup.js` calls `MetadataStorage.clear()` |
+| CORS error in storefront | Backend misconfiguration | Verify `STORE_CORS` in backend `.env` includes storefront URL |
+| Publishable key error | Key not linked | In Admin > Settings > API Keys, link the key to a sales channel |
+| Products not showing | Sales channel not linked | Ensure products are linked to the default sales channel |
+| `cannot find module .medusa/types` | Types not generated | Run `bunx medusa dev` or `bunx medusa build` at least once |
