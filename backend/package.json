@@ -36,11 +36,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "overrides": {
-    "pg": "8.11.5"
-  },
-  "resolutions": {
-    "pg": "8.11.5"
   }
 }
